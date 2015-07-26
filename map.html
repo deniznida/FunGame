@@ -1,0 +1,114 @@
+<script type='text/javascript' src='http://code.jquery.com/jquery-1.7.1.js'></script>
+<script type="text/javascript" src="http://polyk.ivank.net/polyk.js"></script>
+<img id="mapimage" name="mapimage" src="map.jpg" alt="" usemap="#map" />
+<map name="map" id="map">
+
+    <area alt="" id="hopper" name="Hopper" href="javascript:alert('Hopper')" shape="poly" coords="453,251,574,251,573,395,451,395" />
+    
+    <area alt="" id="faraday" name="Faraday" href="javascript:alert('Faraday')" shape="poly" coords="322,313,447,314,448,396,308,396" />
+
+    <area alt="" id="borg" name="Borg" href="javascript:alert('Borg')" shape="poly" coords="107,72,106,153,262,153,270,66" />
+
+    <area alt="" id="kay" name="Kay" href="javascript:alert('Kay')" shape="poly" coords="264,232,263,154,105,156,103,189,135,200,125,230" />
+
+    <area alt="" id="lovelace" name="Lovelace" href="javascript:alert('Lovelace')" shape="poly" coords="108,304,268,304,265,233,126,234" />
+
+    <area alt="" id="hallwayInside" name="HallwayInside" href="javascript:alert('HallwayInside')" shape="poly" coords="268,308,253,361,275,361,277,329,297,331,297,279,327,279,345,66,272,66,264,154" />
+
+    <area alt="" id="swartz" name="Swartz" href="javascript:alert('Swartz')" shape="poly" coords="105,306,298,303,272,394,236,398,94,360" />
+
+    <area alt="" id="turing" name="Turing" href="javascript:alert('Turing')" shape="poly" coords="92,364,73,369,31,478,40,485,235,453,237,398" />
+
+    <area alt="" id="babbage" name="Babbage" href="javascript:alert('Babbage')" shape="poly" coords="739,38,939,37,938,93,903,94,900,142,737,142" />
+
+    <area alt="" id="hallwayOutside" name="HallwayOutside" href="javascript:alert('HallwayOutside')" shape="poly" coords="394,398,804,399,801,448,395,444" />
+
+    <area alt="" id="hallwayEntry" name="hallwayEntry" href="javascript:alert('hallwayEntry')" shape="poly" coords="238,401,390,400,393,447,240,444" />
+
+    <area alt="" id="hallwayOffice" name="hallwayOffice" href="javascript:alert('hallwayOffice')" shape="poly" coords="814,146,860,144,846,448,805,447" />
+    
+    <area alt="" id="restroom" name="Restroom" href="javascript:alert('Restroom')" shape="poly" coords="767,297,807,298,805,342,768,345" />
+
+  
+</map>
+<div id="person" style="position:absolute; width:20px;height:20px;border:solid 1px gray;background-color:red;top:180px;left:430px;"></div>
+<div style="clear: both; width: 500px; height: 50px; border: none;" id="selections"></div>
+
+<input type="button" onclick="setPersonCoords(getRandomRoomCoords())" value="Move"/>
+
+<script language="javascript" src="imagemapster.js"></script>
+<script language="javascript" src="game.js" ></script>
+
+<script type="text/javascript">
+
+// checks each room and returns name of the room that given x,y coordinates is inside of.
+var getRoomNameFromCoordinates = function(x,y){
+
+    // loop thru all rooms, check if x y coordinates are inside the room coordinates
+    var rooms = $('#map').children();
+    for( i = 0; i < rooms.length; i++ ){
+        console.log ('Checking Room Name : ' + name + "\t Coords: " + rooms[i].coords );
+
+        // check if the coordinates are inside the current room!
+        var inRoom = PolyK.ContainsPoint( rooms[i].coords.split(','), x, y) ;
+
+       if ( inRoom === true ){
+        return rooms[i].id;
+       }
+    }
+    return "Not in a room!";
+};
+
+var lastRoom = 0;
+
+var pickRandomRoom = function(){
+  var numberOfRooms = $('#map').children().length;
+  var randomNumber = lastRoom;
+
+  while (lastRoom === randomNumber){
+    randomNumber = Math.floor((Math.random()* numberOfRooms));
+  }
+
+  lastRoom = randomNumber;
+
+  return randomNumber;
+};
+
+var getRandomRoomCoords = function(){
+  var selectedRoom = pickRandomRoom();
+  var rooms = $('#map').children();
+
+  console.log('Selected Room : # ' + selectedRoom + ' -  ' + rooms[selectedRoom].id);
+  var roomCoordinates = rooms[selectedRoom].coords;
+
+  var coordsArray = roomCoordinates.split(",");
+
+  var xTotal = 0;
+  var yTotal = 0;
+
+  for ( i = 0; i < coordsArray.length; i++ ){
+    if (i === 0 || i % 2 === 0){
+      xTotal += coordsArray[i]*1;
+    } else {
+      yTotal += coordsArray[i]*1;
+    }
+  }
+
+  var x = xTotal / (coordsArray.length/2);
+  var y = yTotal / (coordsArray.length/2);
+
+  return Math.floor(x) + "," + Math.floor(y);
+};
+
+
+var setPersonCoords = function(coords){
+  console.log(coords);
+
+  var x = coords.split(",")[0];
+  var y = coords.split(",")[1];
+
+  $("#person").css('left', x).css('top', y);
+
+};
+
+</script>
