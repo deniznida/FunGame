@@ -137,28 +137,39 @@ var randomMoves = function(){
 
 var play = function(){
   move += 1;
-    if( move < maxMoves){
-
     // get room name from coordinates
     var currentRoom = getCurrentRoom();
-
-      switch ( currentRoom.toLowerCase() ){
-        case "restroom":
-          alert("Some privacy please!!!");
-          break;
-        case "kay":
-        case "turing":
-          alert("Can you wait until the lecture is done?");
-          break;
-        case "babbage":
-          alert("Got some serious business to do. Will be back!");
-          break;    
+    
+    switch ( currentRoom.toLowerCase() ){
+      case "restroom":
+        alert("Some privacy please!!!");
+        break;
+      case "kay":
+      case "turing":
+        alert("Can you wait until the lecture is done?");
+        break;
+      case "babbage":
+        alert("Got some serious business to do. Will be back!");
+        break;    
       }
 
-    setPersonCoords(getRandomRoomCoords());
+    if( move < maxMoves){
+
+      setPersonCoords(getRandomRoomCoords());
           
     } else {
-      alert("YOU GOT HIM !!");
-      newGame();
+      // you cannot win if the person is in these rooms
+      switch ( currentRoom.toLowerCase() ){
+        case "restroom":
+        case "kay":
+        case "turing":
+        case "babbage":
+          setPersonCoords(getRandomRoomCoords());
+          break;    
+        default:
+          alert("YOU GOT HIM !!");
+          newGame();
+          break;
+      }
     }
 };
